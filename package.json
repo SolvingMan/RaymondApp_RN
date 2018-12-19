@@ -4,11 +4,25 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
+    "ios": "node node_modules/react-native/local-cli/cli.js run-ios",
+    "build-ios-bundle": "react-native bundle --entry-file index.js --platform ios --dev false --bundle-output ios/main.jsbundle --assets-dest ios",
+    "android": "node node_modules/react-native/local-cli/cli.js run-android",
+    "build-android": "cd ./android && ./gradlew assembleRelease && cp ./app/build/outputs/apk/release/app-release.apk ../../",
+    "build-android-clean": "cd ./android && ./gradlew clean",
+    "build-android-bundle": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res/",
+    "clear": "watchman watch-del-all && yarn cache clean --force && npm cache clean --force  && rm yarn.lock && rm -rf $TMPDIR/metro-* && rm -rf $TMPDIR/haste-* && yarn  && yarn start --reset-cache",
     "test": "jest"
   },
   "dependencies": {
-    "react": "16.6.3",
-    "react-native": "0.57.8"
+    "node-pre-gyp": "^0.12.0",
+    "prop-types": "^15.6.2",
+    "react": "16.4.1",
+    "react-devtools": "^3.4.3",
+    "react-native": "^0.56.0",
+    "react-native-gesture-handler": "^1.0.12",
+    "react-native-image-picker": "^0.27.2",
+    "react-native-splash-screen": "^3.1.1",
+    "react-navigation": "^2.11.2"
   },
   "devDependencies": {
     "babel-jest": "23.6.0",
