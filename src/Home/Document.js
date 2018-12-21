@@ -72,6 +72,14 @@ export default class Document extends Component {
                         load: true
                     });
                     console.log(this.state.selectImgae);
+                    console.log(this.state.data);
+                    console.log(this.state.filename);
+                    this.props.navigation.navigate('PhotoScreen', 
+                    {
+                        selectImgae: this.state.selectImgae,
+                        filename: this.state.filename,
+                        data: this.state.data,
+                    })
                 }
             })
         }

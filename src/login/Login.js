@@ -8,8 +8,9 @@ import {
     Image,
     KeyboardAvoidingView,
     Alert,
+    ActivityIndicator
 } from 'react-native';
-import { getDevicePixel } from '@global';
+import { getDevicePixel, setUser } from '@global';
 
 const logo = require('../img/logo1.png');
 const usericon = require('../img/usericon.png');
@@ -20,6 +21,7 @@ export default class Login extends Component {
     this.state = {
       email: '',
       password: '',
+      loading: false,
       alertVisible: false,
       alertContent: '',
     }
@@ -42,25 +44,29 @@ export default class Login extends Component {
   }
 
   onPressLogin = () => {
-    if (this.state.user_name == '' || this.state.user_pass == '') {
+    console.log(this.state.email);
+    if (this.state.email == '' || this.state.password == '') {
         Alert.alert("Please insert \n username or password");
+        console.log(this.state.email);
         return;
     }
-    fetch("http://18.209.93.188/api/signin?username="+this.state.user_name+"&password="+this.state.user_pass, {
-        method: "GET",
+    this.setState({loading: true});
+    fetch("http://192.168.0.190:8100/api/user/login?email="+this.state.email+"&password="+this.state.password, {
+        method: "POST",
     })
     .then((response) => response.json())
     .then((responseJson) => {
-      if (responseJson.action === "true") {
-          setUserID(responseJson.result._id);
-          // Alert.alert("Login Sucess");   
-          EventRegister.emit("LoginSuccess");
-      }
-      if (responseJson.action === "false")  Alert.alert("Invaild username or password"); 
-    console.log(responseJson.action)
+      if (responseJson.result === "success") {
+        setUser(responseJson);
+        this.props.navigation.navigate('MainScreen');
+        console.log(this.state.password);
+      } else {
+        Alert.alert("Email or Password is Invalid");
+      } 
+    console.log(responseJson);
+    this.setState({loading: false});
     }).catch((error) => {
-        // console.error(error);
-        Alert.alert("Network is disconnected")
+        this.setState({loading: false});
         return;
       });
   }
@@ -80,7 +86,7 @@ export default class Login extends Component {
                 <TextInput
                 style={styles.email}
                 placeholder='Email'
-                placeholderTextColor = "black"
+                placeholderTextColor = "#a6a6a6"
                 autoCapitalize='none'
                 maxLength = {40}
                 keyboardType = "email-address"
@@ -91,7 +97,7 @@ export default class Login extends Component {
                 <TextInput
                 style={styles.password}
                 placeholder='Password'
-                placeholderTextColor = "black"
+                placeholderTextColor = "#a6a6a6"
                 autoCapitalize='none'
                 maxLength = {40}
                 secureTextEntry={true}
@@ -100,18 +106,28 @@ export default class Login extends Component {
                 />
 
                 <View style={styles.loginDiv}>
-                    <TouchableOpacity
+                   { this.state.loading ?
+                        <View
                         style={styles.signInButton}
-                    > 
-                    <Text style={styles.signIn}>Sign In</Text>
-                    </TouchableOpacity>
+                        onPress={this.onPressLogin}
+                        > 
+                         <ActivityIndicator size="small" />
+                        </View>
+                   :
+                        <TouchableOpacity
+                            style={styles.signInButton}
+                            onPress={this.onPressLogin}
+                        > 
+                        <Text style={styles.signIn}>Sign In</Text>
+                        </TouchableOpacity>
+                    }
 
-                    <TouchableOpacity
+                    {/* <TouchableOpacity
                         style={[styles.signInButton, {position: 'absolute', right: 0}]}
                         onPress={this.signup}
                     > 
                     <Text style={styles.signIn}>Sign Up</Text>
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                 </View>
             </View>
             
@@ -119,10 +135,23 @@ export default class Login extends Component {
                 Please log in above to send your paperwork to us
             </Text>
 
-            <TouchableOpacity style={styles.forgotDiv}> 
+            <TouchableOpacity style={styles.forgotDiv}
+                onPress={()=> this.props.navigation.navigate("ForgotPassScreen")}
+            > 
                 <Text style={styles.forgotText}>Forgot Password?</Text>
             </TouchableOpacity>
-        
+
+            <View
+                style={{flexDirection: 'row'}}
+            >
+                <Text>Don't have an account?</Text>
+                <TouchableOpacity
+                    style={{marginLeft: getDevicePixel(3)}}
+                    onPress={this.signup}
+                >
+                    <Text style={{ fontWeight: 'bold', textDecorationLine: 'underline'}}>Sing Up</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
   }
@@ -173,7 +202,8 @@ const styles=StyleSheet.create({
         color: 'black'
     },
     loginDiv: {
-        flexDirection: 'row',
+        // flexDirection: 'row',
+        alignItems: 'center',
         marginTop: '8%',
         width: '80%',
         height: getDevicePixel(10),
@@ -182,9 +212,14 @@ const styles=StyleSheet.create({
     signInButton: {
         width: getDevicePixel(35),
         height: getDevicePixel(10),
+        borderRadius: getDevicePixel(1),
         backgroundColor: '#CFD8DC',
         alignItems: 'center',
         justifyContent: 'center'
+    },
+    signIn:{
+        fontSize: getDevicePixel(5),
+        fontWeight: 'bold'
     },
     note: {
         width: '70%',

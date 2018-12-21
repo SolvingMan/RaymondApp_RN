@@ -10,11 +10,24 @@ import Signup from './src/login/Signup';
 import Signup1 from './src/login/Singup1';
 import Document from './src//Home/Document';
 import Dashboard from './src/Dashborard';
+import ForgotPass from './src/login/ForgotPass';
 
 const LoginNavigator = createStackNavigator ({
   SigninScreen: { screen: Login , navigationOptions : {header : null}},
   SignupScreen1: { screen: Signup,  navigationOptions : {header : null}},
   SignupScreen2: { screen: Signup1,  navigationOptions : {header : null}},
+  ForgotPassScreen: { screen: ForgotPass, navigationOptions : {header : null} }
+},{
+  swipeEnabled: false
+});
+
+const MainNavigator = createStackNavigator ({
+  AuthScreen: { screen: LoginNavigator , navigationOptions : {header : null}},
+  MainScreen: { screen: Dashboard,  navigationOptions : {header : null}},
+},{
+  animationEnabled: false,
+  swipeEnabled: false,
+  lazy: false,
 });
 
 export default class App extends Component{
@@ -37,7 +50,7 @@ export default class App extends Component{
   }
   render() {
     return (
-      <Dashboard />
+      <MainNavigator />
     );
   }
 }

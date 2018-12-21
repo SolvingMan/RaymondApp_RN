@@ -14,21 +14,22 @@ import { getDevicePixel } from '@global';
 const logo = require('../img/logo1.png');
 const usericon = require('../img/usericon.png');
 
-export default class Signup extends Component {
+export default class ForgotPass extends Component {
   constructor(props){
     super(props);
     this.state = {
-      firstname: '',
-      lastname: '',
-      address: '',
-      companyname: '',
-      websitelink: '',
+        email: '',
+        password: '',
+        confirm_password: ''
 
-      alertVisible: false,
-      alertContent: '',
     }
-    this.next = this.next.bind(this);
-    this.back = this.back.bind(this);
+    const { navigation } = this.props;
+    this.firstname = navigation.getParam('firstname');
+    this.lastname = navigation.getParam('lastname');
+    this.address = navigation.getParam('address');
+    this.companyname = navigation.getParam('companyname');
+    this.websitelink = navigation.getParam('websitelink');
+    this.signup = this.signup.bind(this);
   }
 
   componentWillMount() {
@@ -41,31 +42,49 @@ export default class Signup extends Component {
 
   }
 
-  next() {
-    //   console.log(this.state.firstname);
-    //   console.log(this.state.lastname);
-    //   console.log(this.state.address);
-    //   console.log(this.state.companyname);
-    //   console.log(this.state.websitelink);
-      if (this.state.firstname == '' || this.state.lastname == '' || this.state.address == '' || this.state.companyname == '' || this.state.websitelink == '') {
+  signup() {
+      console.log(this.firstname);
+      console.log(this.state.password);
+      console.log(this.state.confirm_password);
+      if (this.state.email == '' || this.state.password == '' || this.state.confirm_password == '') {
         Alert.alert("Please insert all field");
-        console.log(this.state.email);
-        return;
-    }
-      this.props.navigation.navigate('SignupScreen2', 
-            {
-                firstname: this.state.firstname, 
-                lastname: this.state.lastname, 
-                address: this.state.address,
-                companyname: this.state.address,
-                websitelink: this.state.websitelink,
-            }
-        )
-    
-  }
-
-  back() {
-    this.props.navigation.navigate('SigninScreen');
+      } else if (this.state.password !== this.state.confirm_password) {
+        Alert.alert("Password is different");
+      } else {
+        fetch("http://192.168.0.190:8100/api/user/signup", {
+            method: "POST",
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                first_name: this.firstname,
+                last_name: this.lastname,
+                username: this.username,
+                company_name: this.companyname,
+                address: this.address,
+                website_address: this.websitelink,
+                email: this.state.email,
+                password: this.state.password
+            }),
+          })
+            .then((response) => response.json())
+            .then((responseJson) => {
+              if (responseJson.result === "success") {
+                console.log("true")
+              }
+              else {
+                console.log("false")
+              }
+              console.log(responseJson)
+            })
+            .catch((error) => {
+                console.log(error);
+                console.log("erro");
+              Alert.alert("Network is disconnected");
+              return
+            });
+      }
   }
 
   render() {
@@ -75,6 +94,7 @@ export default class Signup extends Component {
                 source = {logo}
                 style = {styles.logo}
             />
+            <Text style={{fontSize: getDevicePixel(5)}}>Did you forgot password?</Text>
             <View style={styles.accountInfo}>
                 <Image 
                     source = {usericon}
@@ -82,69 +102,43 @@ export default class Signup extends Component {
                 />
                 <TextInput
                 style={styles.inputStyle}
-                placeholder='First Name'
-                placeholderTextColor = "#a6a6a6"
+                placeholder='Email'
+                placeholderTextColor = "black"
                 autoCapitalize='none'
+                keyboardType = "email-address"
                 maxLength = {40}
-                ref="firstname"
-                onChangeText={(firstname) => this.setState({firstname})} 
+                ref="email"
+                onChangeText={(email) => this.setState({email})} 
                 />
 
                 <TextInput
                 style={styles.inputStyle}
-                placeholder='Last Name'
-                placeholderTextColor = "#a6a6a6"
+                placeholder='New Password'
+                placeholderTextColor = "black"
                 autoCapitalize='none'
+                secureTextEntry={true}
                 maxLength = {40}
-                ref="lastname"
-                onChangeText={(lastname) => this.setState({lastname})} 
+                ref="password"
+                onChangeText={(password) => this.setState({password})} 
                 />
 
                 <TextInput
                 style={styles.inputStyle}
-                placeholder='Address'
-                placeholderTextColor = "#a6a6a6"
+                placeholder='Confirm Password'
+                placeholderTextColor = "black"
                 autoCapitalize='none'
+                secureTextEntry={true}
                 maxLength = {40}
-                ref="address"
-                onChangeText={(address) => this.setState({address})} 
+                ref="confirm_password"
+                onChangeText={(confirm_password) => this.setState({confirm_password})} 
                 />
-
-                <TextInput
-                style={styles.inputStyle}
-                placeholder='Company Name'
-                placeholderTextColor = "#a6a6a6"
-                autoCapitalize='none'
-                maxLength = {40}
-                ref="companyname"
-                onChangeText={(companyname) => this.setState({companyname})}
-                />
-
-                <TextInput
-                style={styles.inputStyle}
-                placeholder='Website Link'
-                placeholderTextColor = "#a6a6a6"
-                autoCapitalize='none'
-                maxLength = {40}
-                ref="websitelink"
-                onChangeText={(websitelink) => this.setState({websitelink})}
-                />
-
-          
-
+       
                 <View style={styles.loginDiv}>
                     <TouchableOpacity
                         style={styles.signInButton}
-                        onPress={this.back}
+                        // onPress = {this.signup}
                     > 
-                    <Text style={styles.signIn}>Back</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        style={[styles.signInButton, {position: 'absolute', right: 0}]}
-                        onPress={this.next}
-                    > 
-                    <Text style={styles.signIn}>Next</Text>
+                    <Text style={styles.signIn}>Change Password</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -156,7 +150,6 @@ export default class Signup extends Component {
                 Already have an account?
                 </Text>
             </TouchableOpacity>
-            
 
             <View style={styles.forgotDiv}> 
                 {/* <Text style={styles.forgotText}>Forgot Password?</Text> */}
@@ -178,13 +171,13 @@ const styles=StyleSheet.create({
     logo: {
         marginTop: '7%',
         width: '80%',
-        height : '22%',
+        height : '30%',
         resizeMode: 'contain'
     },
     accountInfo: {
-        marginTop: '0%',
+        marginTop: '2%',
         width : '100%',
-        height: '60%',
+        height: '45%',
         backgroundColor: '#0097F5',
         alignItems: 'center',
     },
@@ -213,7 +206,8 @@ const styles=StyleSheet.create({
         color: 'black'
     },
     loginDiv: {
-        flexDirection: 'row',
+        // flexDirection: 'row',
+        alignItems: 'center',
         marginTop: '8%',
         width: '80%',
         height: getDevicePixel(10),

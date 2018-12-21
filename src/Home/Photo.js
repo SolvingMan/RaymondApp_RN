@@ -9,23 +9,27 @@ import {
     KeyboardAvoidingView,
     Alert,
 } from 'react-native';
-import { getDevicePixel, getUser } from '@global';
+import { getDevicePixel } from '@global';
 
 
-export default class Home extends Component {
+export default class Photo extends Component {
   constructor(props){
     super(props);
     this.state = {
-        username : ''
     }
+    const { navigation } = this.props;
+    this.selectImgae = navigation.getParam('selectImgae');
+    this.filename = navigation.getParam('filename');
+    this.data = navigation.getParam('data');
   }
 
   componentWillMount() {
   }
   
   componentDidMount() {
-      console.log(getUser());
-      this.setState({username:getUser().username })
+    console.log("selectImage",this.selectImgae);
+    // console.log(this.state.data);
+    console.log("filename", this.filename);
   }
   
   componentWillUnmount() {
@@ -37,22 +41,19 @@ export default class Home extends Component {
   render() {
     return (
         <View style={styles.container}>       
-            <Text style={{fontSize: 30, color: '#7B8D93', marginTop: getDevicePixel(25)}}>Hi {this.state.username}</Text>
-            <Text style={{fontSize: 35, color: '#0097F5'}}>Let's get Started... </Text>
+            <Image 
+                source = {{uri: this.selectImgae}}
+                style = {{width: '98%', height: '85%', marginTop: getDevicePixel(1)}}
+                resizeMode = 'stretch'
+            />
 
-            <Text style={{fontSize: 24, color: '#7B8D93', marginTop: getDevicePixel(15)}}>Lets scan the paperwork</Text>
-            
             <TouchableOpacity
                 style={styles.singleButton}
-                onPress={()=>this.props.navigation.navigate('DocumentScreen')}
+                onPress={()=>this.props.navigation.navigate('EditScreen')}
             > 
-              <Text style={styles.singleText}>SINGLE PAGE</Text>
+              <Text style={styles.singleText}>Edit File Info</Text>
             </TouchableOpacity>
-            <TouchableOpacity
-                style={styles.multiButton}
-            > 
-            <Text style={styles.multiText}>MULTIPLE PAGE</Text>
-            </TouchableOpacity>
+         
         </View>
     );
   }
@@ -69,7 +70,7 @@ const styles=StyleSheet.create({
     singleButton: {
         width: '60%',
         height: getDevicePixel(10),
-        marginTop: getDevicePixel(20),
+        marginTop: getDevicePixel(6),
         backgroundColor: '#0071BB',
         alignItems: 'center',
         justifyContent: 'center',

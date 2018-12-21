@@ -9,7 +9,7 @@ import {
     KeyboardAvoidingView,
     Alert,
 } from 'react-native';
-import { getDevicePixel } from '@global';
+import { getDevicePixel, setUser } from '@global';
 
 const logo = require('../img/logo1.png');
 const usericon = require('../img/usericon.png');
@@ -26,6 +26,7 @@ export default class Signup1 extends Component {
     const { navigation } = this.props;
     this.firstname = navigation.getParam('firstname');
     this.lastname = navigation.getParam('lastname');
+    this.username = this.firstname + " " + this.lastname;
     this.address = navigation.getParam('address');
     this.companyname = navigation.getParam('companyname');
     this.websitelink = navigation.getParam('websitelink');
@@ -46,6 +47,48 @@ export default class Signup1 extends Component {
       console.log(this.firstname);
       console.log(this.state.password);
       console.log(this.state.confirm_password);
+      if (this.state.email == '' || this.state.password == '' || this.state.confirm_password == '') {
+        Alert.alert("Please insert all field");
+      } else if (this.state.password !== this.state.confirm_password) {
+        Alert.alert("Password is different");
+      } else {
+          console.log("first_name="+this.firstname+"&last_name="+this.lastname+"&username="+this.username+"&company_name="+this.companyname+"&address="+this.address+"&website_address="+this.websitelink+"&email="+this.state.email+"&password="+this.state.password)
+        fetch("http://192.168.0.190:8100/api/user/signup", {
+            // ?first_name="+this.firstname+"&last_name="+this.lastname+"&username="+this.username+"&company_name="+this.companyname+"&address="+this.address+"&website_address="+this.websitelink+"&email="+this.state.email+"&password="+this.state.password
+            method: "POST",
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                first_name: this.firstname,
+                last_name: this.lastname,
+                username: this.username,
+                company_name: this.companyname,
+                address: this.address,
+                website_address: this.websitelink,
+                email: this.state.email,
+                password: this.state.password
+            }),
+          })
+            .then((response) => response.json())
+            .then((responseJson) => {
+              if (responseJson.result === "success") {
+                setUser(responseJson);
+                this.props.navigation.navigate('MainScreen');
+              }
+              else {
+                Alert.alert("Email or Password is Invalid");
+              }
+              console.log(responseJson)
+            })
+            .catch((error) => {
+                console.log(error);
+                console.log("erro");
+              Alert.alert("Network is disconnected");
+              return
+            });
+      }
   }
 
   render() {
@@ -63,7 +106,7 @@ export default class Signup1 extends Component {
                 <TextInput
                 style={styles.inputStyle}
                 placeholder='Email'
-                placeholderTextColor = "black"
+                placeholderTextColor = "#a6a6a6"
                 autoCapitalize='none'
                 keyboardType = "email-address"
                 maxLength = {40}
@@ -74,7 +117,7 @@ export default class Signup1 extends Component {
                 <TextInput
                 style={styles.inputStyle}
                 placeholder='Password'
-                placeholderTextColor = "black"
+                placeholderTextColor = "#a6a6a6"
                 autoCapitalize='none'
                 secureTextEntry={true}
                 maxLength = {40}
@@ -85,7 +128,7 @@ export default class Signup1 extends Component {
                 <TextInput
                 style={styles.inputStyle}
                 placeholder='Confirm Password'
-                placeholderTextColor = "black"
+                placeholderTextColor = "#a6a6a6"
                 autoCapitalize='none'
                 secureTextEntry={true}
                 maxLength = {40}
@@ -103,9 +146,13 @@ export default class Signup1 extends Component {
                 </View>
             </View>
             
-            <Text style={styles.note}>
-               Already have an account?
-            </Text>
+            <TouchableOpacity
+                onPress ={()=> this.props.navigation.navigate('SigninScreen')}
+            >
+                <Text style={styles.note}>
+                Already have an account?
+                </Text>
+            </TouchableOpacity>
 
             <View style={styles.forgotDiv}> 
                 {/* <Text style={styles.forgotText}>Forgot Password?</Text> */}
