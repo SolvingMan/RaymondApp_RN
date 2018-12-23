@@ -47,12 +47,26 @@ export default class Photo extends Component {
                 resizeMode = 'stretch'
             />
 
+            <View style={{flexDirection: 'row'}}>
+            <TouchableOpacity
+                style={[styles.singleButton, {marginRight: getDevicePixel(8)}]}
+                onPress={()=>this.props.navigation.navigate('DocumentScreen')}
+            > 
+              <Text style={styles.singleText}>Back</Text>
+
+            </TouchableOpacity>
+
             <TouchableOpacity
                 style={styles.singleButton}
-                onPress={()=>this.props.navigation.navigate('EditScreen')}
+                onPress={()=>this.props.navigation.navigate('EditScreen', {
+                    selectImgae: this.selectImgae, 
+                    filename: this.filename, 
+                    data: this.data,
+                })}
             > 
               <Text style={styles.singleText}>Edit File Info</Text>
             </TouchableOpacity>
+            </View>
          
         </View>
     );
@@ -68,7 +82,7 @@ const styles=StyleSheet.create({
     //   justifyContent: 'center',
     },
     singleButton: {
-        width: '60%',
+        width: getDevicePixel(30),
         height: getDevicePixel(10),
         marginTop: getDevicePixel(6),
         backgroundColor: '#0071BB',

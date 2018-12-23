@@ -50,6 +50,7 @@ export default class Home extends Component {
             </TouchableOpacity>
             <TouchableOpacity
                 style={styles.multiButton}
+                onPress={()=>this.props.navigation.navigate('DocumentScreen')}
             > 
             <Text style={styles.multiText}>MULTIPLE PAGE</Text>
             </TouchableOpacity>

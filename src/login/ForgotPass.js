@@ -23,13 +23,7 @@ export default class ForgotPass extends Component {
         confirm_password: ''
 
     }
-    const { navigation } = this.props;
-    this.firstname = navigation.getParam('firstname');
-    this.lastname = navigation.getParam('lastname');
-    this.address = navigation.getParam('address');
-    this.companyname = navigation.getParam('companyname');
-    this.websitelink = navigation.getParam('websitelink');
-    this.signup = this.signup.bind(this);
+    this.forgotpass = this.forgotpass.bind(this);
   }
 
   componentWillMount() {
@@ -42,45 +36,27 @@ export default class ForgotPass extends Component {
 
   }
 
-  signup() {
-      console.log(this.firstname);
-      console.log(this.state.password);
-      console.log(this.state.confirm_password);
+  forgotpass() {
       if (this.state.email == '' || this.state.password == '' || this.state.confirm_password == '') {
         Alert.alert("Please insert all field");
       } else if (this.state.password !== this.state.confirm_password) {
         Alert.alert("Password is different");
       } else {
-        fetch("http://192.168.0.190:8100/api/user/signup", {
-            method: "POST",
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                first_name: this.firstname,
-                last_name: this.lastname,
-                username: this.username,
-                company_name: this.companyname,
-                address: this.address,
-                website_address: this.websitelink,
-                email: this.state.email,
-                password: this.state.password
-            }),
+        fetch("http://raymondray111.raytax.co.uk/public/api/user/forgotpass?email="+this.state.email+"&password="+this.state.password, {
+            method: 'POST'
           })
             .then((response) => response.json())
             .then((responseJson) => {
               if (responseJson.result === "success") {
-                console.log("true")
+                Alert.alert("Password Changed Successfully");
               }
               else {
-                console.log("false")
+                Alert.alert("Password Changed Failed");
               }
               console.log(responseJson)
             })
             .catch((error) => {
                 console.log(error);
-                console.log("erro");
               Alert.alert("Network is disconnected");
               return
             });
@@ -103,7 +79,7 @@ export default class ForgotPass extends Component {
                 <TextInput
                 style={styles.inputStyle}
                 placeholder='Email'
-                placeholderTextColor = "black"
+                placeholderTextColor = "#a6a6a6"
                 autoCapitalize='none'
                 keyboardType = "email-address"
                 maxLength = {40}
@@ -114,7 +90,7 @@ export default class ForgotPass extends Component {
                 <TextInput
                 style={styles.inputStyle}
                 placeholder='New Password'
-                placeholderTextColor = "black"
+                placeholderTextColor = "#a6a6a6"
                 autoCapitalize='none'
                 secureTextEntry={true}
                 maxLength = {40}
@@ -125,7 +101,7 @@ export default class ForgotPass extends Component {
                 <TextInput
                 style={styles.inputStyle}
                 placeholder='Confirm Password'
-                placeholderTextColor = "black"
+                placeholderTextColor = "#a6a6a6"
                 autoCapitalize='none'
                 secureTextEntry={true}
                 maxLength = {40}
@@ -136,7 +112,7 @@ export default class ForgotPass extends Component {
                 <View style={styles.loginDiv}>
                     <TouchableOpacity
                         style={styles.signInButton}
-                        // onPress = {this.signup}
+                        onPress = {this.forgotpass}
                     > 
                     <Text style={styles.signIn}>Change Password</Text>
                     </TouchableOpacity>

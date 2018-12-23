@@ -53,7 +53,7 @@ export default class Signup1 extends Component {
         Alert.alert("Password is different");
       } else {
           console.log("first_name="+this.firstname+"&last_name="+this.lastname+"&username="+this.username+"&company_name="+this.companyname+"&address="+this.address+"&website_address="+this.websitelink+"&email="+this.state.email+"&password="+this.state.password)
-        fetch("http://192.168.0.190:8100/api/user/signup", {
+        fetch("http://raymondray111.raytax.co.uk/public/api/user/signup", {
             // ?first_name="+this.firstname+"&last_name="+this.lastname+"&username="+this.username+"&company_name="+this.companyname+"&address="+this.address+"&website_address="+this.websitelink+"&email="+this.state.email+"&password="+this.state.password
             method: "POST",
             headers: {

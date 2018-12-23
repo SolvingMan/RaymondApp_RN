@@ -8,32 +8,80 @@ import {
     Image,
     KeyboardAvoidingView,
     Alert,
+    ActivityIndicator
 } from 'react-native';
-import { getDevicePixel } from '@global';
+import { getDevicePixel, getUser } from '@global';
 
 
 export default class Edit extends Component {
   constructor(props){
     super(props);
     this.state = {
+        caption: '',
+        loading: false
     }
     const { navigation } = this.props;
     this.selectImgae = navigation.getParam('selectImgae');
     this.filename = navigation.getParam('filename');
     this.data = navigation.getParam('data');
+
+    this.save = this.save.bind(this);
   }
 
   componentWillMount() {
   }
   
   componentDidMount() {
-    console.log("selectImage",this.selectImgae);
-    // console.log(this.state.data);
-    console.log("filename", this.filename);
+
   }
   
   componentWillUnmount() {
 
+  }
+
+  save() {
+    console.log(this.selectImgae);
+    if (this.state.caption == '' ) {
+        Alert.alert("Please insert \n description");
+        console.log(this.state.caption);
+        return;
+    }
+    // this.setState({loading: true});
+    console.log(getUser().email);
+    var data = new FormData();
+    data.append('email', getUser().email);
+    data.append('caption', this.state.caption);
+    data.append('upload_file', {
+        uri: this.selectImgae,
+        name: this.filename,
+        type: 'image/jpg',
+        data: this.data
+    });
+    console.log(data);
+    fetch("http://raymondray111.raytax.co.uk/public/api/user/upload_file", {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'multipart/form-data'
+        },
+        body : data
+    })
+    .then((response) => response.json())
+    .then((responseJson) => {
+        console.log(data);
+      if (responseJson.result === "success") {
+        Alert.alert("Upload Successfully");
+        this.props.navigation.navigate('HomeScreen');
+      } else {
+        Alert.alert("Upload Failed");
+      } 
+    console.log(responseJson);
+    this.setState({loading: false});
+    }).catch((error) => {
+        console.log(error);
+        this.setState({loading: false});
+        return;
+      });
   }
 
 
@@ -47,21 +95,35 @@ export default class Edit extends Component {
                 placeholder="Insert info..."
                 placeholderTextColor = '#a6a6a6'
                 autoCapitalize='none'
-                ref="email"
+                ref="caption"
                 multiline = {true}
                 numberOfLines = {5}
-                onChangeText={(email) => this.setState({email})} 
-                
-            
+                onChangeText={(caption) => this.setState({caption})} 
             />
+            <View style={{flexDirection: 'row'}}>
 
             <TouchableOpacity
+                style={[styles.singleButton, {marginRight: getDevicePixel(3)}]}
+                onPress={()=>this.props.navigation.navigate('PhotoScreen')}
+            > 
+              <Text style={styles.singleText}>Back</Text>
+            </TouchableOpacity> 
+
+           { this.state.loading ?
+           <View
                 style={styles.singleButton}
-                onPress={()=>this.props.navigation.navigate('DocumentScreen')}
+            > 
+                <ActivityIndicator size="small" />
+            </View>
+            :
+            <TouchableOpacity
+                style={styles.singleButton}
+                onPress={this.save}
             > 
               <Text style={styles.singleText}>Save and Submit</Text>
-            </TouchableOpacity>
-         
+            </TouchableOpacity> }
+            </View>
+            
         </View>
     );
   }
@@ -98,7 +160,7 @@ const styles=StyleSheet.create({
         padding: 0,
         flexDirection: 'row',
         alignItems: 'center',
-        // justifyContent: 'center',
+        justifyContent: 'center',
         borderRadius: getDevicePixel(2)
     },
     singleText: {

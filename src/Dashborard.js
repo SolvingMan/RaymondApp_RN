@@ -27,7 +27,7 @@ export default class Dashboard extends Component{
 
     render() {
       return (
-        <MyDrawerNavigator />
+        <MyStackNavigator />
       );
     }
   }
@@ -107,19 +107,9 @@ export default class Dashboard extends Component{
     },
     Profile: {
       screen: MyProfileScreen,
-    },
-    Logout: {
-      screen: Logout,
-    },
+    }
   },
-  { navigationOptions: ({ navigation }) => ({
-    header: <View style={{height: getDevicePixel(15), width: '100%', justifyContent: 'center', alignItems: 'center', backgroundColor: '#0097F5'}}>
-    <Text style={{fontSize: getDevicePixel(5.7), marginTop: getDevicePixel(5), fontWeight: 'bold', color: '#fafafa'}}>Raymond's Accountants</Text>
-      <TouchableOpacity style={{right :0, width:15, height: 15, backgroundColor: 'red'}}
-        onPress={()=> this.props.navigation.toggleDrawer()}
-      ></TouchableOpacity>
-    </View>
-    }),
+  { 
       drawerPosition: 'right',
       title: { headertitle: 'Welcome'}
   }
@@ -132,9 +122,9 @@ export default class Dashboard extends Component{
             navigationOptions: ({ navigation }) => ({
                 header: <View style={{height: getDevicePixel(15), width: '100%', justifyContent: 'center', alignItems: 'center', backgroundColor: '#0097F5'}}>
                 <Text style={{fontSize: getDevicePixel(5.7), marginTop: getDevicePixel(5), fontWeight: 'bold', color: '#fafafa'}}>Raymond's Accountants</Text>
-                  <TouchableOpacity style={{right :0, width:15, height: 15, backgroundColor: 'red'}}
+                  {/* <TouchableOpacity style={{right :0, width:15, height: 15, backgroundColor: 'red'}}
                     onPress={()=> this.navigation.toggleDrawer()}
-                  ></TouchableOpacity>
+                  ></TouchableOpacity> */}
                 </View>
               }),
         }
