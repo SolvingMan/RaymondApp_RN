@@ -10,7 +10,7 @@ import {
     Alert,
     ActivityIndicator
 } from 'react-native';
-import { getDevicePixel, getUser } from '@global';
+import { getDevicePixel, getUser, getType } from '@global';
 
 
 export default class Edit extends Component {
@@ -47,10 +47,11 @@ export default class Edit extends Component {
         return;
     }
     // this.setState({loading: true});
-    console.log(getUser().email);
+    console.log(getType());
     var data = new FormData();
     data.append('email', getUser().email);
     data.append('caption', this.state.caption);
+    data.append('type', getType());
     data.append('upload_file', {
         uri: this.selectImgae,
         name: this.filename,
@@ -58,6 +59,7 @@ export default class Edit extends Component {
         data: this.data
     });
     console.log(data);
+    this.setState({loading: true});
     fetch("http://raymondray111.raytax.co.uk/public/api/user/upload_file", {
         method: 'POST',
         headers: {
@@ -70,7 +72,7 @@ export default class Edit extends Component {
     .then((responseJson) => {
         console.log(data);
       if (responseJson.result === "success") {
-        Alert.alert("Upload Successfully");
+        Alert.alert("File has been successfully submitted");
         this.props.navigation.navigate('HomeScreen');
       } else {
         Alert.alert("Upload Failed");

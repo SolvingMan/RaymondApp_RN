@@ -12,6 +12,7 @@ import {
 import ImagePicker from 'react-native-image-picker';
 
 import { getDevicePixel } from '@global';
+import { setType } from '../global';
 const options = {
 	titile: "select a photo",
 	takePhotoButtonTitle: 'Take a Photo',
@@ -33,6 +34,7 @@ export default class Document extends Component {
         selectImgae: '',
         filename: '',
         data: '',
+        type: '',
         load: false
     }
     this.selectPhoto = this.selectPhoto.bind(this);
@@ -48,12 +50,13 @@ export default class Document extends Component {
 
   }
 
-    selectPhoto() {
+    selectPhoto(type) {
         if (1 !== 1 ) {
             Alert.alert("Please signin")
         } 
         else 
         {
+            setType(type);
             ImagePicker.showImagePicker(options, (response) => {
                 // Alert.alert(JSON.stringify(response))
                 if (response.didCancel) {
@@ -79,6 +82,7 @@ export default class Document extends Component {
                         selectImgae: this.state.selectImgae,
                         filename: this.state.filename,
                         data: this.state.data,
+                        type: this.state.type
                     })
                 }
             })
@@ -94,7 +98,7 @@ export default class Document extends Component {
         
             <TouchableOpacity
                 style={[styles.singleButton, {marginTop: getDevicePixel(15)}]}
-                onPress={this.selectPhoto}
+                onPress={()=> this.selectPhoto("sales")}
             > 
                 <Image 
                     source = {usericon}
@@ -105,7 +109,7 @@ export default class Document extends Component {
 
             <TouchableOpacity
                 style={styles.singleButton}
-                onPress={this.selectPhoto}
+                onPress={()=> this.selectPhoto("purchase")}
             > 
                 <Image 
                     source = {usericon}
@@ -116,7 +120,7 @@ export default class Document extends Component {
 
             <TouchableOpacity
                 style={styles.singleButton}
-                onPress={this.selectPhoto}
+                onPress={()=> this.selectPhoto("bank")}
             >
                 <Image 
                     source = {usericon}
@@ -127,7 +131,7 @@ export default class Document extends Component {
 
             <TouchableOpacity
                 style={styles.singleButton}
-                onPress={this.selectPhoto}
+                onPress={()=> this.selectPhoto("miscellaneous")}
             >
                 <Image 
                     source = {usericon}

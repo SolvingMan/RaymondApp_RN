@@ -31,3 +31,13 @@ export function setUser(response) {
 export function getUser() {
   return g_UserData;
 }
+
+export let g_type;
+
+export function setType(type) {
+  g_type = type;
+}
+
+export function getType() {
+  return g_type;
+}

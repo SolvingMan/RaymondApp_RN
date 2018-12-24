@@ -16,7 +16,9 @@ export default class Home extends Component {
   constructor(props){
     super(props);
     this.state = {
-        username : ''
+        username : '',
+        firstname: '',
+        lastname: ''
     }
   }
 
@@ -25,7 +27,9 @@ export default class Home extends Component {
   
   componentDidMount() {
       console.log(getUser());
-      this.setState({username:getUser().username })
+      this.setState({username: getUser().username });
+      this.setState({firstname: getUser().first_name });
+      this.setState({lastname: getUser().last_name });
   }
   
   componentWillUnmount() {
@@ -37,7 +41,7 @@ export default class Home extends Component {
   render() {
     return (
         <View style={styles.container}>       
-            <Text style={{fontSize: 30, color: '#7B8D93', marginTop: getDevicePixel(25)}}>Hi {this.state.username}</Text>
+            <Text style={{fontSize: 30, color: '#7B8D93', marginTop: getDevicePixel(25)}}>Hi {this.state.firstname} {this.state.lastname}</Text>
             <Text style={{fontSize: 35, color: '#0097F5'}}>Let's get Started... </Text>
 
             <Text style={{fontSize: 24, color: '#7B8D93', marginTop: getDevicePixel(15)}}>Lets scan the paperwork</Text>
