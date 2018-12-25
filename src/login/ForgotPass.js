@@ -10,7 +10,7 @@ import {
     Alert,
 } from 'react-native';
 import { getDevicePixel } from '@global';
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 const logo = require('../img/logo1.png');
 const usericon = require('../img/usericon.png');
 
@@ -65,7 +65,13 @@ export default class ForgotPass extends Component {
 
   render() {
     return (
-        <View style={styles.container}>
+        <KeyboardAwareScrollView
+        style={{ backgroundColor: '#fafafa' }}
+        resetScrollToCoords={{ x: 0, y: 0 }}
+        contentContainerStyle={styles.container}
+        scrollEnabled={false}
+        extraScrollHeight={0}
+      >
             <Image 
                 source = {logo}
                 style = {styles.logo}
@@ -131,7 +137,7 @@ export default class ForgotPass extends Component {
                 {/* <Text style={styles.forgotText}>Forgot Password?</Text> */}
             </View>
         
-        </View>
+        </KeyboardAwareScrollView>
     );
   }
 }

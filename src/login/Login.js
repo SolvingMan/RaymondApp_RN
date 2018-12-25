@@ -11,7 +11,7 @@ import {
     ActivityIndicator
 } from 'react-native';
 import { getDevicePixel, setUser } from '@global';
-
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 const logo = require('../img/logo1.png');
 const usericon = require('../img/usericon.png');
 
@@ -73,7 +73,14 @@ export default class Login extends Component {
 
   render() {
     return (
-        <View style={styles.container}>
+        <KeyboardAwareScrollView
+        style={{ backgroundColor: '#fafafa' }}
+        resetScrollToCoords={{ x: 0, y: 0 }}
+        contentContainerStyle={styles.container}
+        scrollEnabled={false}
+        extraScrollHeight={0}
+      >
+        {/* <View style={styles.container}> */}
             <Image 
                 source = {logo}
                 style = {styles.logo}
@@ -83,28 +90,27 @@ export default class Login extends Component {
                     source = {usericon}
                     style = {styles.usericon}
                 />
-                <TextInput
-                style={styles.email}
-                placeholder='Email'
-                placeholderTextColor = "#a6a6a6"
-                autoCapitalize='none'
-                maxLength = {40}
-                keyboardType = "email-address"
-                ref="email"
-                onChangeText={(email) => this.setState({email})} 
-                />
+                    <TextInput
+                    style={styles.email}
+                    placeholder='Email'
+                    placeholderTextColor = "#a6a6a6"
+                    autoCapitalize='none'
+                    maxLength = {40}
+                    keyboardType = "email-address"
+                    ref="email"
+                    onChangeText={(email) => this.setState({email})} 
+                    />
 
-                <TextInput
-                style={styles.password}
-                placeholder='Password'
-                placeholderTextColor = "#a6a6a6"
-                autoCapitalize='none'
-                maxLength = {40}
-                secureTextEntry={true}
-                ref="password"
-                onChangeText={(password) => this.setState({password})} 
-                />
-
+                    <TextInput
+                    style={styles.password}
+                    placeholder='Password'
+                    placeholderTextColor = "#a6a6a6"
+                    autoCapitalize='none'
+                    maxLength = {40}
+                    secureTextEntry={true}
+                    ref="password"
+                    onChangeText={(password) => this.setState({password})} 
+                    />
                 <View style={styles.loginDiv}>
                    { this.state.loading ?
                         <View
@@ -144,7 +150,7 @@ export default class Login extends Component {
             <View
                 style={{flexDirection: 'row'}}
             >
-                <Text>Don't have an account?</Text>
+                <Text>Please request Raymond’s Accountants</Text>
                 <TouchableOpacity
                     style={{marginLeft: getDevicePixel(3)}}
                     onPress={this.signup}
@@ -152,7 +158,8 @@ export default class Login extends Component {
                     <Text style={{ fontWeight: 'bold', textDecorationLine: 'underline'}}>Sing Up</Text>
                 </TouchableOpacity>
             </View>
-        </View>
+        {/* </View> */}
+        </KeyboardAwareScrollView>
     );
   }
 }

@@ -41,3 +41,23 @@ export function setType(type) {
 export function getType() {
   return g_type;
 }
+
+export let g_page;
+
+export function setPage(page) {
+  g_page = page;
+}
+
+export function getPage() {
+  return g_page;
+}
+
+export let flag_pdf='';
+
+export function set_flag_pdf(flag) {
+  flag_pdf = flag;
+}
+
+export function get_flag_pdf() {
+  return flag_pdf;
+}

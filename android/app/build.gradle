@@ -97,6 +97,10 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
 
+    dexOptions {
+        jumboMode = true
+    }
+
     defaultConfig {
         applicationId "com.raymondapp"
         minSdkVersion rootProject.ext.minSdkVersion
@@ -137,6 +141,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-pdf-lib')
     compile project(':react-native-gesture-handler')
     compile project(':react-native-image-picker')
     compile project(':react-native-splash-screen')

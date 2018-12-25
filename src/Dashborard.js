@@ -38,6 +38,7 @@ export default class Dashboard extends Component{
     PhotoScreen: { screen: Photo,  navigationOptions : {header : null}},
     EditScreen: { screen: Edit,  navigationOptions : {header : null}},
   },{
+    initialRouteName: "HomeScreen",
     swipeEnabled: false
   });
 

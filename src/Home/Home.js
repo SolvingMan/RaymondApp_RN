@@ -9,7 +9,7 @@ import {
     KeyboardAvoidingView,
     Alert,
 } from 'react-native';
-import { getDevicePixel, getUser } from '@global';
+import { getDevicePixel, getUser, setPage, setType } from '@global';
 
 
 export default class Home extends Component {
@@ -20,6 +20,7 @@ export default class Home extends Component {
         firstname: '',
         lastname: ''
     }
+    this.setPageType = this.setPageType.bind(this);
   }
 
   componentWillMount() {
@@ -36,6 +37,12 @@ export default class Home extends Component {
 
   }
 
+  setPageType(type) {
+      setPage(type);
+      this.props.navigation.navigate('DocumentScreen');
+
+  }
+
 
 
   render() {
@@ -48,13 +55,13 @@ export default class Home extends Component {
             
             <TouchableOpacity
                 style={styles.singleButton}
-                onPress={()=>this.props.navigation.navigate('DocumentScreen')}
+                onPress={()=>this.setPageType("single")}
             > 
               <Text style={styles.singleText}>SINGLE PAGE</Text>
             </TouchableOpacity>
             <TouchableOpacity
                 style={styles.multiButton}
-                onPress={()=>this.props.navigation.navigate('DocumentScreen')}
+                onPress={()=>this.setPageType("multi")}
             > 
             <Text style={styles.multiText}>MULTIPLE PAGE</Text>
             </TouchableOpacity>
