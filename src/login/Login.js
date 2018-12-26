@@ -147,7 +147,7 @@ export default class Login extends Component {
                 <Text style={styles.forgotText}>Forgot Password?</Text>
             </TouchableOpacity>
 
-            <View
+            {/* <View
                 style={{flexDirection: 'row'}}
             >
                 <Text>Please request Raymond’s Accountants</Text>
@@ -157,7 +157,7 @@ export default class Login extends Component {
                 >
                     <Text style={{ fontWeight: 'bold', textDecorationLine: 'underline'}}>Sing Up</Text>
                 </TouchableOpacity>
-            </View>
+            </View> */}
         {/* </View> */}
         </KeyboardAwareScrollView>
     );
@@ -174,7 +174,7 @@ const styles=StyleSheet.create({
     },
     logo: {
         marginTop: '12%',
-        width: '100%',
+        width: '70%',
         height : '25%'
     },
     accountInfo: {
@@ -188,7 +188,7 @@ const styles=StyleSheet.create({
         width: getDevicePixel(15),
         height: getDevicePixel(15),
         borderRadius: getDevicePixel(7.5),
-        marginTop: getDevicePixel(3),
+        marginTop: getDevicePixel(2),
     },
     email: {
         marginTop: getDevicePixel(5),
@@ -211,7 +211,7 @@ const styles=StyleSheet.create({
     loginDiv: {
         // flexDirection: 'row',
         alignItems: 'center',
-        marginTop: '8%',
+        marginTop: '6%',
         width: '80%',
         height: getDevicePixel(10),
         // backgroundColor: 'grey'

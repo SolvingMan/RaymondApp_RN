@@ -151,7 +151,7 @@ const styles=StyleSheet.create({
     //   justifyContent: 'center',
     },
     logo: {
-        marginTop: '7%',
+        marginTop: '6%',
         width: '80%',
         height : '30%',
         resizeMode: 'contain'
@@ -167,7 +167,7 @@ const styles=StyleSheet.create({
         width: getDevicePixel(15),
         height: getDevicePixel(15),
         borderRadius: getDevicePixel(7.5),
-        marginTop: getDevicePixel(3),
+        marginTop: getDevicePixel(2),
     },
     inputStyle: {
         marginTop: getDevicePixel(3),
@@ -175,7 +175,7 @@ const styles=StyleSheet.create({
         height: getDevicePixel(10),
         backgroundColor: 'white',
         padding: 0,
-        paddingLeft: getDevicePixel(3),
+        paddingLeft: getDevicePixel(2),
         color: 'black'
     },
     password: {
@@ -190,7 +190,7 @@ const styles=StyleSheet.create({
     loginDiv: {
         // flexDirection: 'row',
         alignItems: 'center',
-        marginTop: '8%',
+        marginTop: '6%',
         width: '80%',
         height: getDevicePixel(10),
         // backgroundColor: 'grey'

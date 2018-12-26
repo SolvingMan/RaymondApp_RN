@@ -7,6 +7,7 @@ import Home from './Home/Home';
 import Document from './Home/Document';
 import Profile from './Profile/Profile';
 import Photo from './Home/Photo';
+import PhotoMulti from './Home/PhotoMulti';
 import Edit from './Home/Edit';
 import Login from './login/Login';
 
@@ -36,6 +37,7 @@ export default class Dashboard extends Component{
     HomeScreen: { screen: Home, navigationOptions : {header : null}},
     DocumentScreen: { screen: Document,  navigationOptions : {header : null}},
     PhotoScreen: { screen: Photo,  navigationOptions : {header : null}},
+    PhotoMultiScreen: { screen: PhotoMulti,  navigationOptions : {header : null}},
     EditScreen: { screen: Edit,  navigationOptions : {header : null}},
   },{
     initialRouteName: "HomeScreen",

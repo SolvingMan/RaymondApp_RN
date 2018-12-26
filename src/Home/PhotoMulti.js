@@ -9,11 +9,23 @@ import {
     KeyboardAvoidingView,
     Alert,
 } from 'react-native';
+import ImagePicker from 'react-native-image-picker';
 import { getDevicePixel } from '@global';
 import PDFLib, { PDFDocument, PDFPage } from 'react-native-pdf-lib';
 
+const options = {
+	titile: "select a photo",
+	takePhotoButtonTitle: 'Take a Photo',
+	chooseFromLibraryButtonTitle: 'Choose from gallery',
+	quality: 1,
+	mediaType: 'photo',
+    storageOptions: {
+        skipBackup: true,
+        path: 'images'
+    }
+}
 
-export default class Photo extends Component {
+export default class PhotoMulti extends Component {
   constructor(props){
     super(props);
     this.state = {
@@ -22,15 +34,25 @@ export default class Photo extends Component {
         filename: this.props.navigation.getParam('filename'),
         data: this.props.navigation.getParam('data'),
     }
+
+    this.NextPhoto = this.NextPhoto.bind(this);
+    this.createPdf = this.createPdf.bind(this);
   }
 
-  componentWillMount() {
+   componentWillMount() {   
   }
   
-  async componentDidMount() {
+   componentDidMount() {
     console.log("selectImage",this.state.selectImgae);
-    // console.log(this.state.data);
     console.log("filename", this.state.filename);
+    this.createPdf()
+   }
+  
+  componentWillUnmount() {
+
+  }
+
+  async createPdf() {
     const jpgPath = (this.state.selectImgae).substring(7);
     const page1 = PDFPage
     .create()
@@ -50,15 +72,49 @@ export default class Photo extends Component {
     .then(path => {
         console.log('PDF created at: ' + path);
         // Do stuff with your shiny new PDF!
-        this.setState({filepath: path});   
+        this.setState({filepath: path}); 
+        console.log("(((((((", this.state.filepath);
     });
   }
-  
-  componentWillUnmount() {
 
+  async NextPhoto() {
+    ImagePicker.showImagePicker(options, (response) => {
+        if (response.didCancel) {
+                console.log('User cancelled image picker');
+        }
+        else if (response.error) {
+                console.log('ImagePicker Error: ', response.error);
+                return
+        }
+        else {
+            const url = response.uri
+            console.log('=============', this.state.filepath);
+            this.setState({ 
+                selectImgae: response.uri,
+                filename: ( response.fileName =='' || response.fileName == null ) ?  'image.jpg' : response.fileName,
+                data: response.data,
+            });
+            const jpgPath = url.substring(7);
+            const page1 = PDFPage
+            .create()
+            .setMediaBox(210, 297)
+            .drawImage(jpgPath, 'jpg', {
+                x: 5,
+                y: 15,
+                width: 200,
+                height: 230,
+            })
+            PDFDocument
+            .modify(this.state.filepath)
+            .addPages(page1)
+            .write() // Returns a promise that resolves with the PDF's path
+            .then(path => {
+                console.log('PDF created at: ' + path);
+                console.log('filePaht', this.state.filepath)
+            });
+        }
+    })
   }
-
-
 
   render() {
     return (
@@ -71,7 +127,7 @@ export default class Photo extends Component {
 
             <View style={{flexDirection: 'row'}}>
             <TouchableOpacity
-                style={[styles.singleButton, {marginRight: getDevicePixel(8)}]}
+                style={[styles.singleButton, {marginRight: getDevicePixel(2)}]}
                 onPress={()=>this.props.navigation.navigate('DocumentScreen')}
             > 
               <Text style={styles.singleText}>Back</Text>
@@ -79,12 +135,19 @@ export default class Photo extends Component {
             </TouchableOpacity>
 
             <TouchableOpacity
-                style={styles.singleButton}
+                 style={[styles.singleButton, {marginRight: getDevicePixel(2)}]}
                 onPress={()=>this.props.navigation.navigate('EditScreen', {
                     filepath: this.state.filepath
                 })}
             > 
               <Text style={styles.singleText}>Edit File Info</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+                style={styles.singleButton}
+                onPress={this.NextPhoto}
+            > 
+              <Text style={styles.singleText}>Next</Text>
             </TouchableOpacity>
             </View>
          

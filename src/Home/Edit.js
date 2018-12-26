@@ -22,20 +22,15 @@ export default class Edit extends Component {
     this.state = {
         caption: '',
         loading: false,
-        path: ''
+        filepath: this.props.navigation.getParam('filepath')
     }
-    const { navigation } = this.props;
-    this.selectImgae = navigation.getParam('selectImgae');
-    this.filename = navigation.getParam('filename');
-    this.data = navigation.getParam('data');
 
     this.save = this.save.bind(this);
-    this.saveSingle = this.saveSingle.bind(this);
-    // this.saveMulti = this.saveMulti.bind(this);
-    this.NextPhoto = this.NextPhoto.bind(this);
+    this.back = this.back.bind(this);
   }
 
   componentWillMount() {
+      console.log("filepath***************", this.state.filepath)
   }
   
   componentDidMount() {
@@ -46,164 +41,32 @@ export default class Edit extends Component {
 
   }
 
-  async save() {
-        if (getPage() == 'single') {
-            this.saveSingle();
-        }
-        else {
-            this.saveMulti();
-        }
+  back() {
+      console.log(getPage());
+      if (getPage() == 'single') {
+        this.props.navigation.navigate('PhotoScreen');
+      }
+      else {
+        console.log("dfsadfsdf+++_____");
+        this.props.navigation.navigate('PhotoMultiScreen');
+      }
   }
 
-  async saveMulti() {
+  save() {
     if (this.state.caption == '' ) {
         Alert.alert("Please insert \n description");
         console.log(this.state.caption);
         return;
     }
-    if (get_flag_pdf() !== 'pdf') {
-        set_flag_pdf('pdf');
-        console.log(get_flag_pdf(),"++++++++++++++++==")
-        const jpgPath = (this.selectImgae).substring(7);
-        const page1 = PDFPage
-        .create()
-        .setMediaBox(210, 297)
-        .drawText(this.state.caption)
-        .drawImage(jpgPath, 'jpg', {
-            x: 5,
-            y: 15,
-            width: 200,
-            height: 230,
-        })
-        const docsDir = await PDFLib.getDocumentsDirectory()
-        const pdfPath = `${docsDir}/sample1.pdf`
-        PDFDocument
-        .create(pdfPath)
-        .addPages(page1)
-        .write() // Returns a promise that resolves with the PDF's path
-        .then(path => {
-            console.log('PDF created at: ' + path);
-            // Do stuff with your shiny new PDF!
-            var data = new FormData();
-            data.append('email', getUser().email);
-            data.append('caption', this.state.caption);
-            data.append('type', "PDF");
-            data.append('upload_file', {
-                uri: "file://"+path,
-                name: "sample.pdf",
-            });
-            console.log(data)
-            this.setState({loading: true});
-            fetch("http://raymondray111.raytax.co.uk/public/api/user/upload_file", {
-                method: 'POST',
-                headers: {
-                    Accept: 'application/json',
-                    'Content-Type': 'multipart/form-data'
-                },
-                body : data
-            })
-            .then((response) => response.json())
-            .then((responseJson) => {
-                console.log(data);
-            if (responseJson.result === "success") {
-                Alert.alert("File has been successfully submitted");
-                this.props.navigation.navigate('HomeScreen');
-            } else {
-                Alert.alert("Upload Failed");
-            } 
-            console.log(responseJson);
-            this.setState({loading: false});
-            }).catch((error) => {
-                console.log(error);
-                this.setState({loading: false});
-                return;
-            });
-        });
-        set_flag_pdf('');
-       
-    }
-    else {
-        console.log("doublesdafsadfsdf")
-    const jpgPath = (this.selectImgae).substring(7);
-    const page1 = PDFPage
-    .create()
-    .setMediaBox(210, 297)
-    .drawText(this.state.caption)
-    .drawImage(jpgPath, 'jpg', {
-        x: 5,
-        y: 15,
-        width: 200,
-        height: 230,
-    })
-    const docsDir = await PDFLib.getDocumentsDirectory()
-    const pdfPath = `${docsDir}/sample1.pdf`
-    PDFDocument
-    .modify(pdfPath)
-    .addPages(page1)
-    .write() // Returns a promise that resolves with the PDF's path
-    .then(path => {
-        console.log('PDF created at: ' + path);
-        // Do stuff with your shiny new PDF!
-        // this.setState({path: path})
-        var data = new FormData();
-        data.append('email', getUser().email);
-        data.append('caption', this.state.caption);
-        data.append('type', "PDF");
-        data.append('upload_file', {
-            uri: "file://"+path,
-            name: "sample.pdf",
-        });
-        console.log(data)
-        this.setState({loading: true});
-        fetch("http://raymondray111.raytax.co.uk/public/api/user/upload_file", {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'multipart/form-data'
-            },
-            body : data
-        })
-        .then((response) => response.json())
-        .then((responseJson) => {
-            console.log(data);
-        if (responseJson.result === "success") {
-            Alert.alert("File has been successfully submitted");
-            this.props.navigation.navigate('HomeScreen');
-        } else {
-            Alert.alert("Upload Failed");
-        } 
-        console.log(responseJson);
-        this.setState({loading: false});
-        }).catch((error) => {
-            console.log(error);
-            this.setState({loading: false});
-            return;
-        });
-    });
-    set_flag_pdf('');
-    }
-  }
-
-  saveSingle() {
-    console.log(this.selectImgae);
-    if (this.state.caption == '' ) {
-        Alert.alert("Please insert \n description");
-        console.log(this.state.caption);
-        return;
-    }
-    // this.setState({loading: true});
-    console.log(getType());
     var data = new FormData();
     data.append('email', getUser().email);
     data.append('caption', this.state.caption);
     data.append('type', getType());
     data.append('upload_file', {
-        uri: this.selectImgae,
-        name: this.filename,
-        type: 'image/jpg',
-        data: this.data
+        uri: "file://"+this.state.filepath,
+        name: "sample.pdf",
     });
-    console.log(data);
+    console.log(data)
     this.setState({loading: true});
     fetch("http://raymondray111.raytax.co.uk/public/api/user/upload_file", {
         method: 'POST',
@@ -216,82 +79,20 @@ export default class Edit extends Component {
     .then((response) => response.json())
     .then((responseJson) => {
         console.log(data);
-      if (responseJson.result === "success") {
+    if (responseJson.result === "success") {
         Alert.alert("File has been successfully submitted");
         this.props.navigation.navigate('HomeScreen');
-      } else {
+    } else {
         Alert.alert("Upload Failed");
-      } 
+    } 
     console.log(responseJson);
     this.setState({loading: false});
     }).catch((error) => {
         console.log(error);
         this.setState({loading: false});
         return;
-      });
+    });
   }
-
-  async NextPhoto() {
-    if (this.state.caption == '' ) {
-        Alert.alert("Please insert \n description");
-        console.log(this.state.caption);
-        return;
-    }
-      console.log(get_flag_pdf(),"******************************")
-      if (get_flag_pdf() !== 'pdf') {
-        set_flag_pdf('pdf');
-        console.log(get_flag_pdf(),"++++++++++++++++==")
-        const jpgPath = (this.selectImgae).substring(7);
-        const page1 = PDFPage
-        .create()
-        .setMediaBox(210, 297)
-        .drawText(this.state.caption)
-        .drawImage(jpgPath, 'jpg', {
-            x: 5,
-            y: 15,
-            width: 200,
-            height: 230,
-        })
-        const docsDir = await PDFLib.getDocumentsDirectory()
-        const pdfPath = `${docsDir}/sample1.pdf`
-        PDFDocument
-        .create(pdfPath)
-        .addPages(page1)
-        .write() // Returns a promise that resolves with the PDF's path
-        .then(path => {
-            console.log('PDF created at: ' + path);
-            // Do stuff with your shiny new PDF!
-            // this.setState({path: path});
-        });
-       
-      }
-      else {
-          console.log("doublesdafsadfsdf")
-        const jpgPath = (this.selectImgae).substring(7);
-        const page1 = PDFPage
-        .create()
-        .setMediaBox(210, 297)
-        .drawText(this.state.caption)
-        .drawImage(jpgPath, 'jpg', {
-            x: 5,
-            y: 15,
-            width: 200,
-            height: 230,
-        })
-        const docsDir = await PDFLib.getDocumentsDirectory()
-        const pdfPath = `${docsDir}/sample1.pdf`
-        PDFDocument
-        .modify(pdfPath)
-        .addPages(page1)
-        .write() // Returns a promise that resolves with the PDF's path
-        .then(path => {
-            console.log('PDF created at: ' + path);
-            // Do stuff with your shiny new PDF!
-            // this.setState({path: path})
-        });
-      }
-      this.props.navigation.navigate("DocumentScreen");
-    }
 
   render() {
     return (
@@ -313,30 +114,13 @@ export default class Edit extends Component {
 
                 <TouchableOpacity
                     style={[styles.singleButton, {marginRight: getDevicePixel(3)}]}
-                    onPress={()=>this.props.navigation.navigate('PhotoScreen')}
+                    onPress={this.back}
                 > 
                 <Text style={styles.singleText}>Back</Text>
                 </TouchableOpacity> 
 
-               { (getPage() == 'single') ?
-                <View style={[styles.singleButton, {marginRight: getDevicePixel(3), backgroundColor: 'grey'}]}
-                > 
-                <Text style={styles.singleText}>Next</Text>
-                </View>
-                :
-                <TouchableOpacity
-                    style={[styles.singleButton, {marginRight: getDevicePixel(3)}]}
-                    onPress={this.NextPhoto}
-                > 
-                <Text style={styles.singleText}>Next</Text>
-                </TouchableOpacity>
-                }
-           
-            </View>
-            { this.state.loading ?
-            <View
-                    style={styles.singleButton}
-                > 
+                { this.state.loading ?
+                <View style={styles.singleButton}> 
                     <ActivityIndicator size="small" />
                 </View>
                 :
@@ -344,8 +128,11 @@ export default class Edit extends Component {
                     style={styles.singleButton}
                     onPress={this.save}
                 > 
-                <Text style={styles.singleText}>Save and Submit</Text>
-                </TouchableOpacity> }
+                    <Text style={styles.singleText}>Save and Submit</Text>
+                </TouchableOpacity> 
+                }
+            </View>
+            
         </TouchableOpacity>
     );
   }

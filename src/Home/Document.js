@@ -12,7 +12,7 @@ import {
 import ImagePicker from 'react-native-image-picker';
 
 import { getDevicePixel } from '@global';
-import { setType } from '../global';
+import { setType, getPage } from '../global';
 const options = {
 	titile: "select a photo",
 	takePhotoButtonTitle: 'Take a Photo',
@@ -77,13 +77,24 @@ export default class Document extends Component {
                     console.log(this.state.selectImgae);
                     console.log(this.state.data);
                     console.log(this.state.filename);
-                    this.props.navigation.navigate('PhotoScreen', 
-                    {
-                        selectImgae: this.state.selectImgae,
-                        filename: this.state.filename,
-                        data: this.state.data,
-                        type: this.state.type
-                    })
+                    if (getPage() == 'single') {
+                        this.props.navigation.navigate('PhotoScreen', 
+                        {
+                            selectImgae: this.state.selectImgae,
+                            filename: this.state.filename,
+                            data: this.state.data,
+                            type: this.state.type
+                        })
+                    } else {
+                        this.props.navigation.navigate('PhotoMultiScreen', 
+                        {
+                            selectImgae: this.state.selectImgae,
+                            filename: this.state.filename,
+                            data: this.state.data,
+                            type: this.state.type
+                        })
+                    }
+                    
                 }
             })
         }
