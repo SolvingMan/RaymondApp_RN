@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+    Platform,
     Text,
     TextInput,
     View,
@@ -32,6 +33,7 @@ export default class PhotoMulti extends Component {
         filepath: '',
         selectImgae: this.props.navigation.getParam('selectImgae'),
         filename: this.props.navigation.getParam('filename'),
+        file_path: this.props.navigation.getParam('file_path'),
         data: this.props.navigation.getParam('data'),
     }
 
@@ -53,7 +55,7 @@ export default class PhotoMulti extends Component {
   }
 
   async createPdf() {
-    const jpgPath = (this.state.selectImgae).substring(7);
+    const jpgPath = (Platform.OS === 'ios') ? (this.state.selectImgae).substring(7) : this.state.file_path;
     const page1 = PDFPage
     .create()
     .setMediaBox(210, 297)
@@ -67,6 +69,7 @@ export default class PhotoMulti extends Component {
     const pdfPath = `${docsDir}/sample.pdf`
     PDFDocument
     .create(pdfPath)
+    // .create('/storage/emulated/0/DCIM/sample.pdf')
     .addPages(page1)
     .write() // Returns a promise that resolves with the PDF's path
     .then(path => {
@@ -88,6 +91,7 @@ export default class PhotoMulti extends Component {
         }
         else {
             const url = response.uri
+            // const url = response.path
             console.log('=============', this.state.filepath);
             this.setState({ 
                 selectImgae: response.uri,
@@ -95,6 +99,7 @@ export default class PhotoMulti extends Component {
                 data: response.data,
             });
             const jpgPath = url.substring(7);
+            // const jpgPath = url ;
             const page1 = PDFPage
             .create()
             .setMediaBox(210, 297)

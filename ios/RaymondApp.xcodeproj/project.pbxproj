@@ -1413,7 +1413,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.raymond.com;
 				PRODUCT_NAME = RaymondApp;
-				PROVISIONING_PROFILE_SPECIFIER = distribution_raymond_23;
+				PROVISIONING_PROFILE_SPECIFIER = distribution_raymond_appstore;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1443,7 +1443,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.raymond.com;
 				PRODUCT_NAME = RaymondApp;
-				PROVISIONING_PROFILE_SPECIFIER = distribution_raymond_23;
+				PROVISIONING_PROFILE_SPECIFIER = distribution_raymond_appstore;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

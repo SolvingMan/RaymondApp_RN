@@ -65,6 +65,7 @@ export default class Edit extends Component {
     data.append('upload_file', {
         uri: "file://"+this.state.filepath,
         name: "sample.pdf",
+        type: 'image/jpg'
     });
     console.log(data)
     this.setState({loading: true});

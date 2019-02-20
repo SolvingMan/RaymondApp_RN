@@ -43,8 +43,7 @@ export default class Login extends Component {
     this.props.navigation.navigate('SignupScreen1');
   }
 
-  onPressLogin = () => {
-    console.log(this.state.email);
+  onPressLogin() {
     if (this.state.email == '' || this.state.password == '') {
         Alert.alert("Please insert \n username or password");
         console.log(this.state.email);
@@ -56,6 +55,7 @@ export default class Login extends Component {
     })
     .then((response) => response.json())
     .then((responseJson) => {
+       
       if (responseJson.result === "success") {
         setUser(responseJson);
         this.props.navigation.navigate('MainScreen');
@@ -67,6 +67,7 @@ export default class Login extends Component {
     this.setState({loading: false});
     }).catch((error) => {
         this.setState({loading: false});
+        console.log("_______________________________________", error);
         return;
       });
   }

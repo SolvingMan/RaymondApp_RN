@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+    Platform,
     Text,
     TextInput,
     View,
@@ -19,6 +20,7 @@ export default class Photo extends Component {
     this.state = {
         filepath: '',
         selectImgae: this.props.navigation.getParam('selectImgae'),
+        file_path: this.props.navigation.getParam('file_path'),
         filename: this.props.navigation.getParam('filename'),
         data: this.props.navigation.getParam('data'),
     }
@@ -28,10 +30,10 @@ export default class Photo extends Component {
   }
   
   async componentDidMount() {
-    console.log("selectImage",this.state.selectImgae);
+    console.log("selectImage+++++++++++++++++++", this.state.selectImgae);
     // console.log(this.state.data);
-    console.log("filename", this.state.filename);
-    const jpgPath = (this.state.selectImgae).substring(7);
+    console.log("filename", this.state.filepath);
+    const jpgPath = (Platform.OS === 'ios') ? (this.state.selectImgae).substring(7) : this.state.file_path;
     const page1 = PDFPage
     .create()
     .setMediaBox(210, 297)
@@ -42,9 +44,11 @@ export default class Photo extends Component {
         height: 230,
     })
     const docsDir = await PDFLib.getDocumentsDirectory()
+    console.log("DOC", docsDir);
     const pdfPath = `${docsDir}/sample.pdf`
     PDFDocument
     .create(pdfPath)
+    // .create('/storage/emulated/0/DCIM/sample.pdf')
     .addPages(page1)
     .write() // Returns a promise that resolves with the PDF's path
     .then(path => {
@@ -57,8 +61,6 @@ export default class Photo extends Component {
   componentWillUnmount() {
 
   }
-
-
 
   render() {
     return (
@@ -101,6 +103,7 @@ const styles=StyleSheet.create({
       alignItems: 'center',
     //   justifyContent: 'center',
     },
+
     singleButton: {
         width: getDevicePixel(30),
         height: getDevicePixel(10),
@@ -110,6 +113,7 @@ const styles=StyleSheet.create({
         justifyContent: 'center',
         borderRadius: getDevicePixel(2)
     },
+
     singleText: {
         fontSize: 15,
         lineHeight: 16,

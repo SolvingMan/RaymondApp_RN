@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+    Platform,
     Text,
     TextInput,
     View,
@@ -33,6 +34,7 @@ export default class Document extends Component {
     this.state = {
         selectImgae: '',
         filename: '',
+        file_path: '',
         data: '',
         type: '',
         load: false
@@ -68,8 +70,12 @@ export default class Document extends Component {
                 }
                 else {
                     // Alert.alert("filename")
+                    console.log("response");
+                    console.log(response);
+                    // console.error("file path++++++++========", response.path);
                     this.setState({ 
-                        selectImgae: response.uri,
+                        selectImgae: response.uri, 
+                        file_path: response.path,
                         filename: ( response.fileName =='' || response.fileName == null ) ?  'image.jpg' : response.fileName,
                         data: response.data,
                         load: true
@@ -81,6 +87,7 @@ export default class Document extends Component {
                         this.props.navigation.navigate('PhotoScreen', 
                         {
                             selectImgae: this.state.selectImgae,
+                            file_path: this.state.file_path,
                             filename: this.state.filename,
                             data: this.state.data,
                             type: this.state.type
@@ -89,6 +96,7 @@ export default class Document extends Component {
                         this.props.navigation.navigate('PhotoMultiScreen', 
                         {
                             selectImgae: this.state.selectImgae,
+                            file_path: this.state.file_path,
                             filename: this.state.filename,
                             data: this.state.data,
                             type: this.state.type
